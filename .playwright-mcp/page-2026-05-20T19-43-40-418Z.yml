@@ -1,0 +1,30 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "Food Store" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - link "Catálogo" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - link "Iniciar sesión" [ref=e9] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e10]:
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Iniciar sesión" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Ingresá con tu cuenta de Food Store.
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Email
+            - textbox "Email" [ref=e18]: admin@foodstore.com
+          - generic [ref=e19]:
+            - generic [ref=e20]: Contraseña
+            - textbox "Contraseña" [ref=e21]: Admin1234!
+          - alert [ref=e26]: Demasiados intentos. Intente nuevamente en 15 minutos.
+          - button "Demasiados intentos" [disabled] [ref=e27]
+        - paragraph [ref=e23]:
+          - text: ¿No tenés cuenta?
+          - link "Registrate" [ref=e24] [cursor=pointer]:
+            - /url: /register
+  - contentinfo [ref=e25]: © 2026 Food Store
+  - generic "Notificaciones"

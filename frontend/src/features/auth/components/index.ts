@@ -1,0 +1,5 @@
+export { LoginForm } from './LoginForm'
+export { RegisterForm } from './RegisterForm'
+export { ProtectedRoute } from './ProtectedRoute'
+export { PerfilForm } from './PerfilForm'
+export { CambiarPasswordForm } from './CambiarPasswordForm'

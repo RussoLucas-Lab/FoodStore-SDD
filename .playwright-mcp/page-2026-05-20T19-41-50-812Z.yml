@@ -1,0 +1,20 @@
+- generic [ref=e26]:
+  - complementary [ref=e27]:
+    - navigation [ref=e28]:
+      - link "Dashboard" [ref=e29] [cursor=pointer]:
+        - /url: /admin
+      - link "Productos" [ref=e30] [cursor=pointer]:
+        - /url: /admin/productos
+      - link "Categorías" [ref=e31] [cursor=pointer]:
+        - /url: /admin/categorias
+      - link "Ingredientes" [ref=e32] [cursor=pointer]:
+        - /url: /admin/ingredientes
+      - link "Pedidos" [ref=e33] [cursor=pointer]:
+        - /url: /admin/pedidos
+      - link "Usuarios" [ref=e34] [cursor=pointer]:
+        - /url: /admin/usuarios
+  - main [ref=e36]:
+    - main [ref=e37]:
+      - heading "Panel de Administración" [level=1] [ref=e38]
+      - paragraph [ref=e39]: "Próximamente: dashboard con gráficos, CRUD de productos y gestión de pedidos."
+  - generic "Notificaciones"

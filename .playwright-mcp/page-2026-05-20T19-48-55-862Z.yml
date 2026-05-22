@@ -1,0 +1,19 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "Food Store" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - link "Catálogo" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - link "Mis pedidos" [ref=e26] [cursor=pointer]:
+          - /url: /pedidos
+        - generic [ref=e27]:
+          - generic [ref=e28]: Test
+          - button "Salir" [ref=e29] [cursor=pointer]
+  - main [ref=e10]:
+    - main [ref=e30]:
+      - heading "Nuestro Menú" [level=1] [ref=e31]
+      - paragraph [ref=e32]: "Próximamente: catálogo de productos con filtros por categoría."
+  - contentinfo [ref=e25]: © 2026 Food Store
+  - generic "Notificaciones"
