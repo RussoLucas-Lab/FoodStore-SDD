@@ -72,9 +72,13 @@ export function CheckoutForm() {
       },
       {
         onSuccess: (data) => {
-          // Transicionar paymentStore a 'processing' con el ID del pedido creado
-          setProcessing(data.id)
-          // No navegar aquí — el CardPayment se renderiza inline
+          if (selectedFormaPago === 'MERCADOPAGO') {
+            // Transicionar paymentStore a 'processing' con el ID del pedido creado
+            setProcessing(data.id)
+          } else {
+            // EFECTIVO/TRANSFERENCIA: el pedido queda PENDIENTE, confirmación manual
+            navigate('/checkout/pago-exitoso')
+          }
         },
       },
     )

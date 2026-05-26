@@ -223,18 +223,6 @@ class PedidoService:
 
         estado_actual = pedido.estado_codigo
 
-        # Bloquear PENDIENTE → CONFIRMADO (RN-FS02)
-        if nuevo_estado == "CONFIRMADO":
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail={
-                    "detail": "CONFIRMADO solo puede ser alcanzado vía webhook de pago",
-                    "code": "TRANSICION_NO_PERMITIDA",
-                    "field": "nuevo_estado",
-                    "status": status.HTTP_422_UNPROCESSABLE_ENTITY,
-                },
-            )
-
         # Validar transición con FSM
         if not order_fsm.is_allowed(estado_actual, nuevo_estado, actor_roles):
             raise HTTPException(
@@ -259,6 +247,22 @@ class PedidoService:
                         "status": status.HTTP_422_UNPROCESSABLE_ENTITY,
                     },
                 )
+
+        # Efecto de borde: decrementar stock al confirmar manualmente (EFECTIVO/TRANSFERENCIA)
+        if estado_actual == "PENDIENTE" and nuevo_estado == "CONFIRMADO":
+            detalles = uow.pedidos.get_detalles_by_pedido_id(pedido_id)
+            for detalle in detalles:
+                try:
+                    uow.productos.decrement_stock(detalle.producto_id, detalle.cantidad)
+                except ValueError as exc:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail={
+                            "detail": str(exc),
+                            "code": "STOCK_INSUFICIENTE",
+                            "status": status.HTTP_409_CONFLICT,
+                        },
+                    )
 
         # Efecto de borde: restaurar stock si CONFIRMADO → CANCELADO (RN-FS05)
         if estado_actual == "CONFIRMADO" and nuevo_estado == "CANCELADO":

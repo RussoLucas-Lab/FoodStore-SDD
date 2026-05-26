@@ -181,10 +181,15 @@ class TestOrderStateMachineUnit:
         """CLIENT NO puede cancelar desde EN_PREP."""
         assert order_fsm.is_allowed("EN_PREP", "CANCELADO", ["CLIENT"]) is False
 
-    def test_pendiente_a_confirmado_rechazado_para_humanos(self):
-        """PENDIENTE → CONFIRMADO siempre rechazado para roles humanos."""
-        for roles in [["CLIENT"], ["ADMIN"], ["PEDIDOS"], ["CLIENT", "ADMIN"]]:
-            assert order_fsm.is_allowed("PENDIENTE", "CONFIRMADO", roles) is False
+    def test_pendiente_a_confirmado_rechazado_para_client(self):
+        """PENDIENTE → CONFIRMADO rechazado para CLIENT."""
+        assert order_fsm.is_allowed("PENDIENTE", "CONFIRMADO", ["CLIENT"]) is False
+
+    def test_pendiente_a_confirmado_permitido_para_admin_y_pedidos(self):
+        """PENDIENTE → CONFIRMADO permitido para ADMIN y PEDIDOS (confirmación manual EFECTIVO/TRANSFERENCIA)."""
+        assert order_fsm.is_allowed("PENDIENTE", "CONFIRMADO", ["ADMIN"]) is True
+        assert order_fsm.is_allowed("PENDIENTE", "CONFIRMADO", ["PEDIDOS"]) is True
+        assert order_fsm.is_allowed("PENDIENTE", "CONFIRMADO", ["ADMIN", "PEDIDOS"]) is True
 
     def test_pendiente_a_confirmado_permitido_para_sistema(self):
         """PENDIENTE → CONFIRMADO permitido para el sistema (webhook)."""
@@ -250,13 +255,13 @@ class TestCambiarEstadoEndpoint:
         assert last.estado_desde == "CONFIRMADO"
         assert last.estado_hasta == "EN_PREP"
 
-    def test_pendiente_a_confirmado_rechazado_patch(
+    def test_pendiente_a_confirmado_permitido_para_admin_patch(
         self,
         client: TestClient,
         session: Session,
         fsm_env: dict,
     ):
-        """PENDIENTE → CONFIRMADO vía PATCH retorna 422 (RN-FS02)."""
+        """PENDIENTE → CONFIRMADO vía PATCH permitido para ADMIN (confirmación manual EFECTIVO/TRANSFERENCIA)."""
         admin_headers = login(client, "fsm_admin@test.com", "Admin1234!")
         client_headers = login(client, "fsm_client@test.com", "Client1234!")
         pedido_id = _crear_pedido(client, fsm_env, client_headers)
@@ -265,6 +270,24 @@ class TestCambiarEstadoEndpoint:
             f"/api/v1/pedidos/{pedido_id}/estado",
             json={"nuevo_estado": "CONFIRMADO"},
             headers=admin_headers,
+        )
+        assert resp.status_code == 200, resp.json()
+        assert resp.json()["estado_codigo"] == "CONFIRMADO"
+
+    def test_pendiente_a_confirmado_rechazado_para_client_patch(
+        self,
+        client: TestClient,
+        session: Session,
+        fsm_env: dict,
+    ):
+        """PENDIENTE → CONFIRMADO rechazado para CLIENT vía PATCH."""
+        client_headers = login(client, "fsm_client@test.com", "Client1234!")
+        pedido_id = _crear_pedido(client, fsm_env, client_headers)
+
+        resp = client.patch(
+            f"/api/v1/pedidos/{pedido_id}/estado",
+            json={"nuevo_estado": "CONFIRMADO"},
+            headers=client_headers,
         )
         assert resp.status_code == 422
         assert resp.json()["code"] == "TRANSICION_NO_PERMITIDA"

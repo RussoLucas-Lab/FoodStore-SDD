@@ -32,6 +32,7 @@ const TERMINAL_STATES = new Set(['ENTREGADO', 'CANCELADO'])
 
 // Mapa de transiciones para determinar el siguiente estado
 const NEXT_STATE: Record<string, string> = {
+  PENDIENTE: 'CONFIRMADO',
   CONFIRMADO: 'EN_PREP',
   EN_PREP: 'EN_CAMINO',
   EN_CAMINO: 'ENTREGADO',

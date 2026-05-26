@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import type { AxiosError } from 'axios'
 import { getPagoPorPedido } from '@/api/endpoints/pagos'
 import { usePaymentStore } from '@/store/paymentStore'
 
@@ -31,8 +32,12 @@ export function usePaymentStatus(pedidoId: number | null): void {
         } else if (pago.estado_pago === 'RECHAZADO') {
           setRejected()
         }
-      } catch {
-        setError('Error al verificar el estado del pago')
+      } catch (err) {
+        const axiosErr = err as AxiosError
+        // 404 = pago aún no registrado, seguir esperando sin marcar error
+        if (axiosErr.response?.status !== 404) {
+          setError('Error al verificar el estado del pago')
+        }
       }
     }
 

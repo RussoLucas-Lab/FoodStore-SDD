@@ -32,6 +32,15 @@ export function Navbar() {
             </Link>
           )}
 
+          {accessToken && ['ADMIN', 'STOCK', 'PEDIDOS'].includes(usuario?.rol ?? '') && (
+            <Link
+              to="/admin"
+              className="text-text-secondary hover:text-text-primary transition-colors"
+            >
+              Panel Admin
+            </Link>
+          )}
+
           {/* Badge del carrito — visible para todos */}
           <CartBadge />
 

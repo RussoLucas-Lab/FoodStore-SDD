@@ -128,8 +128,8 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // --- Toast global para 400 / 403 / 500 (no para 401) ---
-    if (statusCode && [400, 403, 500].includes(statusCode)) {
+    // --- Toast global para 400 / 403 / 409 / 422 / 500 (no para 401) ---
+    if (statusCode && [400, 403, 409, 422, 500].includes(statusCode)) {
       const detail =
         error.response?.data?.detail ?? 'Ocurrió un error inesperado.'
       useUiStore.getState().addToast(String(detail), 'error')

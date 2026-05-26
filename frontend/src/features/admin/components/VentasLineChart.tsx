@@ -57,7 +57,7 @@ export function VentasLineChart() {
             <XAxis dataKey="fecha" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip
-              formatter={(value: number) => [`$${value.toFixed(2)}`, 'Total']}
+              formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Total']}
             />
             <Line
               type="monotone"

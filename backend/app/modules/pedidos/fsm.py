@@ -12,7 +12,7 @@ from typing import List
 # Lista vacía especial: ["_SISTEMA"] indica que solo el sistema puede ejecutarla.
 TRANSITION_MAP: dict[str, dict[str, List[str]]] = {
     "PENDIENTE": {
-        "CONFIRMADO": ["_SISTEMA"],       # RN-FS02: solo vía webhook
+        "CONFIRMADO": ["_SISTEMA", "ADMIN", "PEDIDOS"],  # webhook (MP) o confirmación manual (EFECTIVO/TRANSFERENCIA)
         "CANCELADO": ["CLIENT", "ADMIN", "PEDIDOS"],
     },
     "CONFIRMADO": {
@@ -64,13 +64,11 @@ class OrderStateMachine:
         if allowed_roles is None:
             return False
 
-        # La transición PENDIENTE → CONFIRMADO es exclusiva del sistema (webhook)
-        if "_SISTEMA" in allowed_roles:
-            return False
+        # Excluir _SISTEMA — solo aplica a transiciones automáticas (webhook)
+        human_roles = [r for r in allowed_roles if r != "_SISTEMA"]
 
-        # Verificar si alguno de los roles del usuario está permitido
         for role in roles:
-            if role in allowed_roles:
+            if role in human_roles:
                 return True
 
         return False

@@ -124,7 +124,16 @@
       "Bash(pkill -f \"uvicorn app.main\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(p\\) for p in d['paths'] if 'admin' in p]\")",
       "PowerShell(python -m uvicorn --version 2>&1)",
-      "PowerShell(python3 -m uvicorn --version 2>&1)"
+      "PowerShell(python3 -m uvicorn --version 2>&1)",
+      "Bash(python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload)",
+      "Bash(python -c \"import sqlite3; conn = sqlite3.connect\\('foodstore_dev.db'\\); tables = conn.execute\\(\\\\\"SELECT name FROM sqlite_master WHERE type='table'\\\\\"\\).fetchall\\(\\); print\\([t[0] for t in tables]\\)\")",
+      "Bash(python -c \"import sqlite3; conn = sqlite3.connect\\('foodstore_dev.db'\\); schema = conn.execute\\(\\\\\"SELECT sql FROM sqlite_master WHERE name='direccion_entrega'\\\\\"\\).fetchone\\(\\); print\\(schema\\)\")",
+      "Bash(python -c \"import sqlite3; conn = sqlite3.connect\\('foodstore_dev.db'\\); rows = conn.execute\\('SELECT COUNT\\(*\\) FROM direccion_entrega'\\).fetchone\\(\\); print\\('Filas en direccion_entrega:', rows[0]\\); users = conn.execute\\('SELECT COUNT\\(*\\) FROM usuario'\\).fetchone\\(\\); print\\('Usuarios:', users[0]\\)\")",
+      "Bash(python -m pytest tests/ -x -q --tb=short)",
+      "Bash(python -m pytest \"tests/pedidos/test_pedidos_lectura.py::TestCancelarPedidoPropio::test_cancelacion_exitosa_con_motivo\" -v --tb=long)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":8000\")",
+      "Bash(findstr \"LISTENING\")"
     ]
   }
 }

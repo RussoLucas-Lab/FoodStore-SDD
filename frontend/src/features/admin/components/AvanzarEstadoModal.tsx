@@ -5,6 +5,7 @@
  * Sin campo de motivo (solo admin/gestor avanzan, no cancelan con este modal).
  */
 
+import type { AxiosError } from 'axios'
 import { Modal } from '@/components/Modal'
 import { Button } from '@/components/Button'
 import { useAvanzarEstado } from '../hooks/useAvanzarEstado'
@@ -41,6 +42,10 @@ export function AvanzarEstadoModal({
     )
   }
 
+  const errorMsg = avanzar.error
+    ? ((avanzar.error as AxiosError<{ detail?: string }>).response?.data?.detail ?? 'Error al cambiar el estado.')
+    : null
+
   return (
     <Modal open={open} onClose={onClose} maxWidth="max-w-sm">
       <div className="p-6">
@@ -57,6 +62,10 @@ export function AvanzarEstadoModal({
         <p className="text-sm text-text-secondary mb-5">
           ¿Confirmás el cambio de estado?
         </p>
+
+        {errorMsg && (
+          <p className="text-sm text-error mb-4">{String(errorMsg)}</p>
+        )}
 
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onClose} disabled={avanzar.isPending}>
